@@ -29,9 +29,10 @@ public class Main {
         codigos.put(6, "JPY");
         codigos.put(7, "PYG");
 
-
+        int from = 0,to = 0;
         String codigoOrigem, codigoDestino;
-        double quantidade;
+        double quantidade = 0;
+        boolean continua = true;
 
 
 
@@ -49,11 +50,22 @@ public class Main {
         System.out.println("\t\t\t 5 - Euro");
         System.out.println("\t\t\t 6 - Iene Japones");
         System.out.println("\t\t\t 7 - Guarani Paraguaio");
+        do{
+            try{
+                System.out.println(" Escoha um numero de  ( 1 - 7 ) ");
+                from = sc.nextInt();
+                continua = false;
 
-        codigoOrigem = codigos.get(sc.nextInt());
+            }catch (InputMismatchException err){
+                System.err.println("Não é permitido inserir letras, informe apenas números inteiros de 1 - 7 !");
+                sc.nextLine();
+            }
+        }while(continua || from < 1 ||from > 7);
 
+        codigoOrigem = codigos.get(from);
+        System.out.println("codigo de Origem = "+codigoOrigem);
 
-
+        continua=true;
 
         System.out.println("    *************** Escoha a Moeda de Destino  ( 1 - 7 )**********");
         System.out.println("\t\t\t 1 - Dollar");
@@ -63,12 +75,42 @@ public class Main {
         System.out.println("\t\t\t 5 - Euro");
         System.out.println("\t\t\t 6 - Iene Japones");
         System.out.println("\t\t\t 7 - Guarani Paraguaio");
-        //from = sc.nextInt();
 
-        codigoDestino = codigos.get(sc.nextInt());
+        do{
+            try{
+                System.out.println(" Escoha um numero de  ( 1 - 7 ) ");
+                to = sc.nextInt();
+                if(to == from){
+                    System.out.println("A moeda de destino é igual a moeda de origem ");
+                    System.out.println(" Escoha um numero diferente de "+ from);
 
-        System.out.println("Digite a quantidade que deseja converter :");
-        quantidade = sc.nextFloat();
+                }else{
+                continua = false;}
+
+            }catch (InputMismatchException err){
+                System.err.println("Não é permitido inserir letras, informe apenas números inteiros de 1 - 7 !");
+                sc.nextLine();
+            }
+        }while(continua || to < 1 || to > 7);
+
+        codigoDestino = codigos.get(to);
+
+        System.out.println("codigo de Destino = "+codigoDestino);
+
+        continua = true;
+        do{
+            try{
+                System.out.println("Digite a quantidade que deseja converter :");
+                quantidade = sc.nextFloat();
+                continua = false;
+
+            }catch (InputMismatchException err){
+                System.err.println("Não é permitido inserir letras, informe apenas números separados por .!");
+                sc.nextLine();
+            }
+        }while(continua);
+
+        quantidade = quantidade;
 
         sendHttpGETRequest(codigoOrigem, codigoDestino, quantidade);
 
@@ -83,7 +125,7 @@ public class Main {
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setRequestMethod("GET");
         int responseCode = httpURLConnection.getResponseCode();
-        System.out.println(responseCode);
+       // System.out.println(responseCode);
 
         if(responseCode == HttpURLConnection.HTTP_OK){
             BufferedReader in = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
